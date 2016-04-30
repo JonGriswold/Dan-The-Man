@@ -1,4 +1,4 @@
-import urllib2, json
+import urllib2, json, random
 
 class WordWrapper:
 
@@ -9,9 +9,13 @@ class WordWrapper:
     def get_word_type(self):
         return self.word_type
 
+    # returns a list of synonyms
     def get_synonyms(self):
         return self.synonyms
 
+    # returns a random synonym from the list
+    def get_synonym(self):
+        return self.synonyms[random.randint(0, len(synonyms) - 1)]
 
 class Thesaurus:
 
@@ -30,7 +34,11 @@ class Thesaurus:
             synonyms = json_dict['response'][0]['list']['synonyms']
             synonyms = synonyms.split("|")
 
-            return WordWrapper(word_type, synonyms)
+            new_synonyms = []
+            for syn in synonyms:
+                new_synonyms.append(syn.replace(" (similar term)", ""))
+
+            return WordWrapper(word_type, new_synonyms)
         except Exception as e:
             print str(e)
 
@@ -38,7 +46,7 @@ class Thesaurus:
 def main():
 
     theo = Thesaurus()
-    result = theo.lookup_word("quick")
+    result = theo.lookup_word("designated")
     print "Word Type: " + result.get_word_type()
     print "Synonyms: " + str(result.get_synonyms())
 
