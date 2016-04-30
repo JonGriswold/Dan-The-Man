@@ -3,6 +3,8 @@ import thesaurus
 # global lists
 articles = ["the", "a", "an", "this", "that"]
 
+marker_words = ["Before", "after", "because", "since", "in order to", "although", "though", "whenever", "wherever", "whether", "while", "even though", "even if", "at one point"]
+
 prepositions = [
     "aboard",
     "about",
@@ -78,6 +80,8 @@ prepositions = [
 
 fanboys = ["for", "and", "nor", "but", "or", "yet", "so"]
 
+numbers = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "dozen"]
+
 # enum for word types
 class WordType:
 	article = 0
@@ -88,7 +92,8 @@ class WordType:
 	adjective = 5
 	fanboys = 6
 	preposition = 7
-	other = 8
+	marker = 8
+	other = 9
 
 class Word:
 	def __init__(self, word, theo):
@@ -155,6 +160,24 @@ class Word:
 			self.word_type = WordType.verb
 		self.synonym = res.get_synonym()
 
+	def is_number(self, word):
+		return (word in numbers)
+
+	def is_possessive(self, word):
+		return (word[-2:] == "'s" or word[-2:] == "s'")
+
+	def is_marker(self, word):
+		return (word in marker_words)
+
+	def process_possessive(self, word):
+		temp = ""
+		if word[-2:] == "'s" or word[-2:] == "s'":
+			temp = word[-2:]
+
+		word = word.replace(temp, "")
+		self.lookup_helper(word)
+		self.synonym += "'s"
+
 	def anal_word(self, word):
 		""" analyze the word, determine its type and suggested synonym """
 
@@ -176,8 +199,16 @@ class Word:
 			elif self.is_preposition(word):
 				self.word_type = WordType.preposition
 				self.synonym = word
+			elif self.is_marker(word):
+				self.word_type = WordType.marker
+				self.synonym = word
 			elif self.is_verb(word):
 				self.process_verb(word)
+			elif self.is_number(word):
+				self.word_type = WordType.adjective
+				self.synonym = word
+			elif self.is_possessive(word):
+				self.process_possessive(word)
 			else:
 				# if the word is a noun, or adjective, query the thesaurus service
 				self.lookup_helper(word)
@@ -186,13 +217,13 @@ def main():
 
     theo = thesaurus.Thesaurus()
 
-    test = "I really like jumping"
+    test = "At one point before Trump arrived , about two dozen protesters tried to rush barriers near the hotel . Police officers then rushed to the building's doors , successfully blocking the protesters from getting in . Some of the doors' handles were handcuffed from the inside so they couldn't be forced open ."
     words = test.split(" ")
     new_sentence = ""
 
     for word in words:
     	w = Word(word, theo)
-    	new_sentence += "(" + w.get_og_word() + ", " + w.get_synonym() + ") "
+    	new_sentence += w.get_synonym() + " "
 
     print new_sentence
 
