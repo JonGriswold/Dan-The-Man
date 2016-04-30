@@ -1,4 +1,7 @@
 import re
+import Paragraph
+import word
+import sentence
 
 class Essay:
 	#This should be the top level class
@@ -6,23 +9,27 @@ class Essay:
 	paragraphs = []
 
 
-	def __init__(self, plainTextEssay):
+	def __init__(self, plain_text_essay):
 
-		noReturnEssay = re.sub(r"\n", "", plainTextEssay)
-		self.paragraphs = re.split(r"\t", noReturnEssay)
+		no_return_essay = re.sub(r"\n", "", plain_text_essay)
+		self.paragraphs = re.split(r"\t", no_return_essay)
 
 		self.paragraphs.remove('')
 
+	def unplagarize(self)
+		for x in xrange(0,len(self.paragraphs) - 1):
+			paragraphs[x] = Paragraph(paragraphs[x])
+
 	def __str__(self):
-		fullEssay = "\t" + self.paragraphs[0]
+		full_essay = "\t" + self.paragraphs[0]
 		for x in xrange(1,len(self.paragraphs)):
-			fullEssay = fullEssay + "\n\t" + self.paragraphs[x]
-		return fullEssay
+			full_essay = full_essay + "\n\t" + self.paragraphs[x]
+		return full_essay
 
 def main():
-	totallyNotPlagarized = Essay("\tThe quick brown fox jumped over the lazy dog.\n\tIt was a designated fox.") #pass in unedited essay string
+	totally_not_plagarized = Essay("\tThe quick brown fox jumped over the lazy dog.\n\tIt was a designated fox.") #pass in unedited essay string
 
-	print totallyNotPlagarized
+	print totally_not_plagarized
 
 if __name__ == "__main__":
 	main()
