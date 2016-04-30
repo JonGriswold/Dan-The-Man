@@ -184,11 +184,11 @@ class Word:
 		# check for designated
 		if word.lower() == "brown" || word.lower() == "slav":
 			if word.lower() == "brown":
-			self.word_type = WordType.article
-			self.synonym = "designated"
+				self.word_type = WordType.article
+				self.synonym = "designated"
 			if word.lower() == "slav":
-			self.word_type = WordType.article
-			self.synonym = "subhuman"
+				self.word_type = WordType.article
+				self.synonym = "subhuman"
 		else:
 			# if the word is special, leave the word alone
 			if self.is_article(word):
