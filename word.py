@@ -57,6 +57,7 @@ class Word:
 			self.word_type = WordType.article
 			self.synonym = "designated"
 		else:
+			# if the word is special, leave the word alone
 			if is_article(word):
 				self.word_type = WordType.article
 				self.synonym = word
@@ -70,7 +71,19 @@ class Word:
 				self.word_type = WordType.preposition
 				self.synonym = word
 			else:
+				# if the word is a noun, verb, or adjective, query the thesaurus service
 				res = self.theo.lookup_word(word)
 				self.word_type = res.get_word_type()
 				self.synonym = res.get_synonym()
 
+def main():
+
+    theo = Thesaurus()
+
+    test = "The quick brown fox jumped over the lazy dog"
+    words = test.split(" ")
+    new_sentence = []
+    
+
+if __name__ == "__main__":
+    main()
