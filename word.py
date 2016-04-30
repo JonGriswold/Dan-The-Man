@@ -1,7 +1,7 @@
 import thesaurus
 
 # global lists
-articles = ["the", "a", "an"]
+articles = ["the", "a", "an", "this", "that"]
 
 prepositions = [
     "aboard",
@@ -186,7 +186,7 @@ def main():
 
     theo = thesaurus.Thesaurus()
 
-    test = "The quick brown fox jumped over the lazy dog"
+    test = "I really like jumping"
     words = test.split(" ")
     new_sentence = ""
 

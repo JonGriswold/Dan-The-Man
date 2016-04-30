@@ -15,7 +15,11 @@ class WordWrapper:
 
     # returns a random synonym from the list
     def get_synonym(self):
-        return self.synonyms[random.randint(0, len(self.synonyms) - 1)]
+        RANDOM = 0
+        if RANDOM == 1:
+            return self.synonyms[random.randint(0, len(self.synonyms) - 1)]
+        else:
+            return self.synonyms[0]
 
 class Thesaurus:
 
@@ -36,7 +40,7 @@ class Thesaurus:
 
             new_synonyms = []
             for syn in synonyms:
-                new_synonyms.append(syn.replace(" (similar term)", ""))
+                new_synonyms.append(syn.replace(" (similar term)", "").replace(" (antonym)", "").replace(" (related term)", ""))
 
             return WordWrapper(word_type, new_synonyms)
         except Exception as e:
@@ -47,7 +51,7 @@ class Thesaurus:
 def main():
 
     theo = Thesaurus()
-    result = theo.lookup_word("browns")
+    result = theo.lookup_word("like")
     print "Word Type: " + result.get_word_type()
     print "Synonyms: " + str(result.get_synonyms())
 
