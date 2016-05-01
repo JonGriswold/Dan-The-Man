@@ -16,9 +16,9 @@ class Essay:
 
 		self.paragraphs.remove('')
 
-	def unplagarize(self)
-		for x in xrange(0,len(self.paragraphs) - 1):
-			paragraphs[x] = Paragraph(paragraphs[x])
+	def unplagarize(self):
+		for x in xrange(0,len(self.paragraphs)):
+			self.paragraphs[x] = (Paragraph.Paragraph(self.paragraphs[x])).unplagarize()
 
 	def __str__(self):
 		full_essay = "\t" + self.paragraphs[0]
@@ -28,6 +28,8 @@ class Essay:
 
 def main():
 	totally_not_plagarized = Essay("\tThe quick brown fox jumped over the lazy dog.\n\tIt was a designated fox.") #pass in unedited essay string
+
+	totally_not_plagarized.unplagarize()
 
 	print totally_not_plagarized
 
