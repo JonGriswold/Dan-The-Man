@@ -1,7 +1,7 @@
 import thesaurus
 
 # global lists
-articles = ["the", "a", "an", "this", "that", "it", "its", "all"]
+articles = ["the", "a", "an", "this", "that", "it", "its", "all", "thing"]
 
 marker_words = ["before", "after", "because", "since", "in order to", "although", "though", "whenever", "wherever", "whether", "while", "even though", "even if", "at one point"]
 
@@ -86,7 +86,7 @@ numbers = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine
 
 be_verbs = ["to", "will", "be", "is", "being", "was", "were", "has", "have", "won't", "didn't", "doesn't", "it's"]
 
-pronouns = ["I", "you", "he", "she", "it", "I'm", "me", "we", "us", "they", "him", "her"]
+pronouns = ["I", "you", "he", "she", "it", "I'm", "me", "we", "us", "they", "him", "her", "my"]
 
 # enum for word types
 class WordType:

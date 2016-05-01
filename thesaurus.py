@@ -46,11 +46,14 @@ class Thesaurus:
                 synonyms = ls['list']['synonyms']
                 synonyms = synonyms.split("|")
 
+                count = 0
                 for syn in synonyms:
+                    if count == 3: break
                     if "antonym" in syn:
                         new_synonyms.append(w)
                     else:
                         new_synonyms.append(syn.replace(" (similar term)", "").replace(" (related term)", ""))
+                    count += 1
 
             return WordWrapper(word_type, new_synonyms)
         except Exception as e:
@@ -60,7 +63,7 @@ class Thesaurus:
 def main():
 
     theo = Thesaurus()
-    result = theo.lookup_word("has")
+    result = theo.lookup_word("love")
     print "Word Type: " + result.get_word_type()
     print "Synonyms: " + str(result.get_synonyms())
 
