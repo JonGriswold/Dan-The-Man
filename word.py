@@ -1,9 +1,9 @@
 import thesaurus
 
 # global lists
-articles = ["the", "a", "an", "this", "that"]
+articles = ["the", "a", "an", "this", "that", "it", "its", "all"]
 
-marker_words = ["Before", "after", "because", "since", "in order to", "although", "though", "whenever", "wherever", "whether", "while", "even though", "even if", "at one point"]
+marker_words = ["before", "after", "because", "since", "in order to", "although", "though", "whenever", "wherever", "whether", "while", "even though", "even if", "at one point"]
 
 prepositions = [
     "aboard",
@@ -78,9 +78,15 @@ prepositions = [
     "without"
 ]
 
+vowels = ["a", "e", "i", "o", "u"]
+
 fanboys = ["for", "and", "nor", "but", "or", "yet", "so"]
 
 numbers = ["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "dozen"]
+
+be_verbs = ["to", "will", "be", "is", "being", "was", "were", "has", "have", "won't", "didn't", "doesn't", "it's"]
+
+pronouns = ["I", "you", "he", "she", "it", "I'm", "me", "we", "us", "they", "him", "her"]
 
 # enum for word types
 class WordType:
@@ -117,7 +123,7 @@ class Word:
 		if len(word) > 0:
 			return (word[0].isupper())
 		else:
-			return false
+			return False
 
 	def get_word_type(self):
 		return self.word_type
@@ -136,16 +142,23 @@ class Word:
 		if "ing" == word[-3:]:
 			temp = "ing"
 		elif "ed" == word[-2:]:
-			temp = "ed"
+			if word[-4][0] in vowels:
+				temp = "d"
+			else:
+				temp = "ed"
 		elif "s" == word[-1:]:
 			temp = "s"
 
 		word = word.replace(temp, "")
 		self.lookup_helper(word)
-		if self.synonym[-1:] == "e" and temp == "ed":
-			self.synonym += "d"
-		else:
-			self.synonym += temp
+
+		if temp == "d" or temp == "ed":
+			if self.synonym[-1:][0] == "e":
+				temp = "d"
+			else:
+				temp = "ed"
+
+		self.synonym += temp
 
 	def lookup_helper(self, word):
 		res = self.theo.lookup_word(word)
@@ -163,11 +176,17 @@ class Word:
 	def is_number(self, word):
 		return (word in numbers)
 
+	def is_pronoun(self, word):
+		return (word in pronouns)
+
 	def is_possessive(self, word):
 		return (word[-2:] == "'s" or word[-2:] == "s'")
 
 	def is_marker(self, word):
 		return (word in marker_words)
+
+	def is_be_verb(self, word):
+		return (word in be_verbs)
 
 	def process_possessive(self, word):
 		temp = ""
@@ -182,16 +201,22 @@ class Word:
 		""" analyze the word, determine its type and suggested synonym """
 
 		# check for designated
-		if word.lower() == "brown" || word.lower() == "slav":
+		if word.lower() == "brown" or word.lower() == "slav":
 			if word.lower() == "brown":
-				self.word_type = WordType.article
+				self.word_type = WordType.adjective
 				self.synonym = "designated"
 			if word.lower() == "slav":
-				self.word_type = WordType.article
+				self.word_type = WordType.noun
 				self.synonym = "subhuman"
 		else:
 			# if the word is special, leave the word alone
 			if self.is_article(word):
+				self.word_type = WordType.article
+				self.synonym = word
+			elif self.is_be_verb(word):
+				self.word_type = WordType.verb
+				self.synonym = word
+			elif self.is_pronoun(word):
 				self.word_type = WordType.article
 				self.synonym = word
 			elif self.is_proper_noun(word):
@@ -206,11 +231,11 @@ class Word:
 			elif self.is_marker(word):
 				self.word_type = WordType.marker
 				self.synonym = word
-			elif self.is_verb(word):
-				self.process_verb(word)
 			elif self.is_number(word):
 				self.word_type = WordType.adjective
 				self.synonym = word
+			elif self.is_verb(word):
+				self.process_verb(word)
 			elif self.is_possessive(word):
 				self.process_possessive(word)
 			else:
@@ -221,7 +246,7 @@ def main():
 
     theo = thesaurus.Thesaurus()
 
-    test = "At one point before Trump arrived , about two dozen protesters tried to rush barriers near the hotel . Police officers then rushed to the building's doors , successfully blocking the protesters from getting in . Some of the doors' handles were handcuffed from the inside so they couldn't be forced open ."
+    test = ""
     words = test.split(" ")
     new_sentence = ""
 

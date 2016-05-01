@@ -25,33 +25,42 @@ class Thesaurus:
 
     def __init__(self):
         self.key = "JGpg2lxzPT1Zt6FOsuNo"
+        self.key2 = "e41fb970752270a0b4f0af04581e9233"
 
     def lookup_word(self, w):
         try:
             self.url = "http://thesaurus.altervista.org/thesaurus/v1?word=" + w + "&language=en_US&key=" + self.key + "&output=json"
             response = urllib2.urlopen(self.url)
             json_dump = response.read()
+            #print json_dump
             json_dict = json.loads(json_dump.decode("UTF-8"))
+            json_list = json_dict['response']
+
             word_type = json_dict['response'][0]['list']['category']
             word_type = word_type.replace("(", "")
             word_type = word_type.replace(")", "")
-            synonyms = json_dict['response'][0]['list']['synonyms']
-            synonyms = synonyms.split("|")
 
             new_synonyms = []
-            for syn in synonyms:
-                new_synonyms.append(syn.replace(" (similar term)", "").replace(" (antonym)", "").replace(" (related term)", ""))
+
+            for ls in json_list:
+                synonyms = ls['list']['synonyms']
+                synonyms = synonyms.split("|")
+
+                for syn in synonyms:
+                    if "antonym" in syn:
+                        new_synonyms.append(w)
+                    else:
+                        new_synonyms.append(syn.replace(" (similar term)", "").replace(" (related term)", ""))
 
             return WordWrapper(word_type, new_synonyms)
         except Exception as e:
             print str(e)
             return WordWrapper("other", [w])
 
-
 def main():
 
     theo = Thesaurus()
-    result = theo.lookup_word("to")
+    result = theo.lookup_word("has")
     print "Word Type: " + result.get_word_type()
     print "Synonyms: " + str(result.get_synonyms())
 
